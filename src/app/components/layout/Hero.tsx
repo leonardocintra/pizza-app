@@ -9,7 +9,7 @@ export default function Hero() {
           Tudo <br /> é melhor <br /> com {" "}
           <span className="text-primary">Pizza</span>
         </h1>
-        <p className="my-4 text-gray-500 text-sm">
+        <p className="my-6 text-gray-500 text-sm">
           Pizza é o que esta faltando para fazer seu dia ficar completo. Uma
           simples deliciosidade para sua vida
         </p>
