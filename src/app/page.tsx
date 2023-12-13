@@ -1,4 +1,3 @@
-import Header from "./components/layout/Header";
 import Hero from "./components/layout/Hero";
 import HomeMenu from "./components/layout/HomeMenu";
 import SectionHeaders from "./components/layout/SectionHeaders";
@@ -6,7 +5,6 @@ import SectionHeaders from "./components/layout/SectionHeaders";
 export default function Home() {
   return (
     <>
-      <Header />
       <Hero />
       <HomeMenu />
 
@@ -47,10 +45,6 @@ export default function Home() {
           <h3 className="text-center  text-4xl underline text-slate-700">(16) 99973-5008</h3>
         </div>
       </section>
-
-      <footer className="border-t p-8 text-center text-gray-500">
-        &copy; 2023 - Todos os direitos reservados
-      </footer>
     </>
   );
 }
