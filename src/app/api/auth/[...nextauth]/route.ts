@@ -12,8 +12,8 @@ const handler = NextAuth({
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
-        password: { label: "Password", type: "password" }
+        username: { label: "E-mail", type: "email", placeholder: "joao@gmail.com" },
+        password: { label: "Senha", type: "password" }
       },
       async authorize(credentials, req) {
         // You need to provide your own logic here that takes the credentials
