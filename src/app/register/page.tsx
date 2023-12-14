@@ -90,6 +90,12 @@ export default function RegisterPage() {
           <Image src={"/google.png"} alt="Google" width={32} height={32} />
           Login com Google
         </button>
+        <div className="text-center text-2xl my-4 text-gray-600 border-t pt-5">
+          Ja possui uma conta ?{" "}
+          <Link href={"/login"} className="underline">
+            Fazer login &raquo;
+          </Link>
+        </div>
       </form>
     </section>
   );
