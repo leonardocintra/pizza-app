@@ -1,5 +1,6 @@
 "use client";
 
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
@@ -84,6 +85,7 @@ export default function RegisterPage() {
           Ou fazer login com Google
         </div>
         <button
+          onClick={() => signIn("google", { callbackUrl: "/" })}
           type="button"
           className="flex gap-4 justify-center items-center"
         >
