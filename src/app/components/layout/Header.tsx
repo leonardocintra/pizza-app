@@ -8,7 +8,14 @@ export default function Header() {
 
   console.log(session);
 
+  const userData = session.data?.user;
+  let userName = userData?.name || userData?.email;
+
   const status = session.status;
+
+  if (userName && userName.includes(' ')) {
+    userName = userName.split(' ')[0]
+  }
 
   return (
     <div>
@@ -24,12 +31,17 @@ export default function Header() {
         </nav>
         <nav className="flex items-center gap-4 text-gray-600 font-semibold">
           {status === "authenticated" && (
-            <button
-              onClick={() => signOut()}
-              className="bg-primary rounded-full text-white px-8 py-2"
-            >
-              Sair
-            </button>
+            <>
+              <Link href={"/profile"} className="whitespace-nowrap">
+                Olá, {userName}
+              </Link>
+              <button
+                onClick={() => signOut()}
+                className="bg-primary rounded-full text-white px-8 py-2"
+              >
+                Sair
+              </button>
+            </>
           )}
 
           {status === "unauthenticated" && (
