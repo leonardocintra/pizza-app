@@ -24,7 +24,7 @@ export default function LoginPage() {
 
   return (
     <section className="mt-8">
-      <h1 className="text-center text-primary text-4xl">Login</h1>
+      <h1 className="text-center text-primary text-4xl">Entrar / Login</h1>
 
       <form className="max-w-xs mx-auto" onSubmit={handleFormSubmit}>
         <input

@@ -7,7 +7,6 @@ import { User } from "../../../models/User";
 
 
 const handler = NextAuth({
-
   secret: process.env.SECRET,
   providers: [
     GoogleProvider({
