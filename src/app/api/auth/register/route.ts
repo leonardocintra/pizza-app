@@ -1,5 +1,5 @@
+import { User } from "@/app/models/User";
 import mongoose from "mongoose"
-import { User } from "../../../models/User";
 
 export async function POST(req: any) {
 
@@ -12,4 +12,4 @@ export async function POST(req: any) {
   return Response.json(createUser, { status: 201 })
 }
 
-// Youtube: https://youtu.be/nGoSP3MBV2E?t=9311
+// Youtube: https://youtu.be/nGoSP3MBV2E?t=9650

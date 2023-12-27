@@ -85,7 +85,7 @@ export default function RegisterPage() {
           Ou fazer login com Google
         </div>
         <button
-          onClick={() => signIn("google", { callbackUrl: "/" })}
+          onClick={() => signIn("google")}
           type="button"
           className="flex gap-4 justify-center items-center"
         >

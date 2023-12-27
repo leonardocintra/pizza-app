@@ -39,7 +39,7 @@ export default function LoginPage() {
           type="password"
           name="password"
           disabled={loginInProgress}
-          placeholder="Senha"
+          placeholder="Senha ..."
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -47,15 +47,23 @@ export default function LoginPage() {
           Entrar
         </button>
         <div className="my-4 text-gray-600 text-center">
-          Ou fazer login com Google
+          Ou fazer login com Google / Apple
         </div>
         <button
           type="button"
           onClick={() => signIn("google", { callbackUrl: "/" })}
           className="flex gap-4 justify-center items-center"
         >
-          <Image src={"/google.png"} alt="Google" width={32} height={32} />
+          <Image src={"/google.png"} alt="Google" width={30} height={30} />
           Login com Google
+        </button>
+        <button
+          type="button"
+          onClick={() => signIn("facebook", { callbackUrl: "/" })}
+          className="flex gap-4 justify-center items-center mt-3"
+        >
+          <Image src={"/facebook.png"} alt="Facebook" width={32} height={32} />
+          Login com Facebook
         </button>
       </form>
     </section>
