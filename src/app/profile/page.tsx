@@ -21,7 +21,8 @@ export default function ProfilePage() {
     <section className="mt-8">
       <PageTitle title="Minha conta" />
 
-      // https://youtu.be/nGoSP3MBV2E?t=10478
+      <p>Parei em https://youtu.be/nGoSP3MBV2E?t=10478 </p>
+
 
     </section>
 
