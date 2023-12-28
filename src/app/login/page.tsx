@@ -60,7 +60,7 @@ export default function LoginPage() {
         </button>
         <button
           type="button"
-          onClick={() => signIn("facebook", { callbackUrl: "/" })}
+          onClick={() => signIn("facebook", { callbackUrl: "/", redirect: true })}
           className="flex gap-4 justify-center items-center mt-3"
         >
           <Image src={"/facebook.png"} alt="Facebook" width={32} height={32} />
