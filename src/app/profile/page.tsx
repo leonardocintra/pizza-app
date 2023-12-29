@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import PageTitle from "../components/layout/PageTitle";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 
 export default function ProfilePage() {
 
@@ -17,11 +18,22 @@ export default function ProfilePage() {
     redirect("/login");
   }
 
+  const userImage = session.data?.user?.image as string;
+
   return (
     <section className="mt-8">
       <PageTitle title="Minha conta" />
 
-      <p>Parei em https://youtu.be/nGoSP3MBV2E?t=10478 </p>
+      <form className="max-w-xs mx-auto border">
+        <div>
+          <Image src={userImage} width={64} height={64} alt="User image" />
+        </div>
+      </form>
+
+      <p>
+
+        Parei em https://youtu.be/nGoSP3MBV2E?t=10728
+      </p>
 
 
     </section>
