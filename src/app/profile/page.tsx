@@ -18,21 +18,35 @@ export default function ProfilePage() {
     redirect("/login");
   }
 
-  const userImage = session.data?.user?.image as string;
+  const user = session.data?.user;
+  const userImage = user?.image;
 
   return (
     <section className="mt-8">
       <PageTitle title="Minha conta" />
 
-      <form className="max-w-xs mx-auto border">
-        <div>
-          <Image src={userImage} width={64} height={64} alt="User image" />
+      <form className="max-w-md mx-auto">
+        <div className="flex gap-4 items-center">
+          <div>
+            <div className=" p-2 rounded-lg relative">
+
+
+
+              <Image className="rounded-lg w-full h-full mb-1" src={userImage} alt="User image" width={250} height={250} />
+
+              <button type="button">Alterar</button>
+            </div>
+          </div>
+          <div className="grow">
+            <input type="text" name="name" id="name" placeholder="Nome completo" value={user?.name as string} />
+            <input type="email" name="email" id="email" placeholder="Email" disabled={true} value={user?.email as string} />
+            <button type="submit">Salvar</button>
+          </div>
         </div>
       </form>
 
       <p>
-
-        Parei em https://youtu.be/nGoSP3MBV2E?t=10728
+        Parei em https://youtu.be/nGoSP3MBV2E?t=11238
       </p>
 
 
