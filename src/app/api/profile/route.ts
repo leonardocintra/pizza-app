@@ -1,14 +1,30 @@
 import mongoose from "mongoose";
 import { User } from "@/app/models/User";
 
+type UpdateProfile = {
+  name?: string;
+  image?: string;
+}
+
 export async function PUT(req: any) {
   const data = await req.json();
 
-  if ('name' in data && 'email' in data) {
+  const update: UpdateProfile = {};
+
+  if ('name' in data) {
+    update.name = data.name
+  }
+
+  if ('imagem' in data) {
+    update.image = data.image
+  }
+
+  if (Object.keys(update).length > 0 && 'email' in data) {
     mongoose.connect(process.env.MONGODB_URI as string)
+
     const email = data.email;
-    await User.updateOne({ email }, { name: data.name })
-    // update user name
+    await User.updateOne({ email }, update)
+
     return Response.json(true, { status: 200 });
   } else {
     return Response.json({

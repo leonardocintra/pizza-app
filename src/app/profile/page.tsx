@@ -13,12 +13,16 @@ export default function ProfilePage() {
   const [saved, setSaved] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
+  // TODO: em vez de toda vez fazer request no S3 ver opcao de colocar um loading ate a imagem aparecer
+  const [userImagem, setUserImagem] = useState<string>("https://leonardo-pizzaapp.s3.sa-east-1.amazonaws.com/sem-foto-pizzaapp.png");
   const [email, setEmail] = useState<string>("");
 
   useEffect(() => {
     if (status === "authenticated") {
       setUserName(session.data.user?.name || "");
       setEmail(session.data.user?.email || "");
+      setUserImagem(session.data.user?.image || "");
+
     }
   }, [session, status])
 
@@ -28,10 +32,15 @@ export default function ProfilePage() {
     if (files?.length === 1) {
       const data = new FormData;
       data.set('file', files[0]);
-      await fetch('/api/upload', {
+      const response = await fetch('/api/upload', {
         method: 'POST',
         body: data
       });
+
+      const linkImagem = await response.json();
+      setUserImagem(linkImagem);
+
+
     }
   }
 
@@ -45,7 +54,8 @@ export default function ProfilePage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name: userName,
-        email: email
+        email: email,
+        image: userImagem,
       }),
     })
 
@@ -66,7 +76,6 @@ export default function ProfilePage() {
   }
 
   const user = session.data?.user;
-  const userImage = user?.image;
 
   return (
     <section className="mt-8">
@@ -84,9 +93,9 @@ export default function ProfilePage() {
 
         <div className="flex gap-4 items-center">
           <div>
-            <div className=" p-2 rounded-lg relative">
+            <div className=" p-2 rounded-lg relative max-w-[120px]">
 
-              <Image className="rounded-lg w-full h-full mb-1" src={userImage || ""} alt="User image" width={250} height={250} />
+              <Image priority={false} className="rounded-lg w-full h-full mb-1" src={userImagem} alt="User image" width={250} height={250} />
 
               <label>
                 <input type="file" name="photo" id="photo" className="hidden" onChange={handleFileChange} />
