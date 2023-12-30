@@ -11,11 +11,13 @@ export default function ProfilePage() {
   console.log(session);
 
   const { status } = session;
-  const [userName, setUserName] = useState<string>("")
+  const [userName, setUserName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
 
   useEffect(() => {
     if (status === "authenticated") {
-      setUserName(session.data.user?.name || "")
+      setUserName(session.data.user?.name || "");
+      setEmail(session.data.user?.email || "");
     }
   }, [session, status])
 
@@ -26,7 +28,8 @@ export default function ProfilePage() {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: userName
+        name: userName,
+        email: email
       }),
     })
   }
