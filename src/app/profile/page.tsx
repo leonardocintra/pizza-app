@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 
 export default function ProfilePage() {
   const session = useSession();
-  console.log(session);
 
   const { status } = session;
   const [saved, setSaved] = useState<boolean>(false);
@@ -22,6 +21,19 @@ export default function ProfilePage() {
       setEmail(session.data.user?.email || "");
     }
   }, [session, status])
+
+  async function handleFileChange(ev: any) {
+    const files = ev.target.files;
+
+    if (files?.length === 1) {
+      const data = new FormData;
+      data.set('file', files[0]);
+      await fetch('/api/upload', {
+        method: 'POST',
+        body: data
+      });
+    }
+  }
 
   async function handleProfileSubmit(ev: any) {
     ev.preventDefault();
@@ -76,7 +88,10 @@ export default function ProfilePage() {
 
               <Image className="rounded-lg w-full h-full mb-1" src={userImage || ""} alt="User image" width={250} height={250} />
 
-              <button type="button">Alterar</button>
+              <label>
+                <input type="file" name="photo" id="photo" className="hidden" onChange={handleFileChange} />
+                <span className="block text-center border border-gray-500 text-sm rounded-lg p-1 cursor-pointer">Editar</span>
+              </label>
             </div>
           </div>
           <form onSubmit={handleProfileSubmit} className="grow">
