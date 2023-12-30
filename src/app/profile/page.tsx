@@ -11,6 +11,8 @@ export default function ProfilePage() {
   console.log(session);
 
   const { status } = session;
+  const [saved, setSaved] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
 
@@ -23,6 +25,8 @@ export default function ProfilePage() {
 
   async function handleProfileSubmit(ev: any) {
     ev.preventDefault();
+    setSaved(false);
+    setIsSaving(true);
 
     const response = await fetch("/api/profile", {
       method: 'PUT',
@@ -32,6 +36,12 @@ export default function ProfilePage() {
         email: email
       }),
     })
+
+    setIsSaving(false);
+
+    if (response.ok) {
+      setSaved(true);
+    }
   }
 
   if (status === "loading") {
@@ -50,7 +60,16 @@ export default function ProfilePage() {
     <section className="mt-8">
       <PageTitle title="Minha conta" />
 
+
       <div className="max-w-md mx-auto">
+        {saved && (
+          <h2 className="text-center bg-green-200 p-4 rounded-lg border-4 border-green-400 text-green-800">Perfil salvo com sucesso!</h2>
+        )}
+
+        {isSaving && (
+          <h2 className="text-center bg-blue-200 p-4 rounded-lg border-4 border-blue-400 text-blue-800">Salvando seus dados ...</h2>
+        )}
+
         <div className="flex gap-4 items-center">
           <div>
             <div className=" p-2 rounded-lg relative">
@@ -71,7 +90,7 @@ export default function ProfilePage() {
       </div>
 
       <p>
-        Parei em https://youtu.be/nGoSP3MBV2E?t=12489
+        Parei em https://youtu.be/nGoSP3MBV2E?t=12817
       </p>
 
 
