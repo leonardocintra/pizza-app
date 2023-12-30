@@ -114,7 +114,7 @@ export default function ProfilePage() {
       </div>
 
       <p>
-        Parei em https://youtu.be/nGoSP3MBV2E?t=12817
+        Parei em https://youtu.be/nGoSP3MBV2E?t=14892
       </p>
 
 
