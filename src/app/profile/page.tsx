@@ -5,15 +5,17 @@ import PageTitle from "../components/layout/PageTitle";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import InfoBox from "../components/layout/InfoBox";
+import toast from "react-hot-toast";
 
 export default function ProfilePage() {
   const session = useSession();
-
   const { status } = session;
-  const [saved, setSaved] = useState<boolean>(false);
-  const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [isUploading, setIsUploading] = useState<boolean>(false);
+
+  if (status === "unauthenticated") {
+    toast.error('Usuario sem acesso!');
+    redirect("/login");
+  }
+
   const [userName, setUserName] = useState<string>("");
   // TODO: em vez de toda vez fazer request no S3 ver opcao de colocar um loading ate a imagem aparecer
   const [userImagem, setUserImagem] = useState<string>("https://leonardo-pizzaapp.s3.sa-east-1.amazonaws.com/sem-foto-pizzaapp.png");
@@ -34,47 +36,56 @@ export default function ProfilePage() {
     if (files?.length === 1) {
       const data = new FormData;
       data.set('file', files[0]);
-      setIsUploading(true);
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: data
-      });
 
-      const linkImagem = await response.json();
-      setUserImagem(linkImagem);
-      setIsUploading(false);
+      const uploadingPromise = new Promise<void>(async (resolve, reject) => {
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: data
+        });
+
+        if (response.ok) {
+          const linkImagem = await response.json();
+          setUserImagem(linkImagem);
+          resolve();
+        } else {
+          reject(response.statusText);
+        }
+      })
+
+      toast.promise(uploadingPromise, {
+        loading: 'Carregando imagem...',
+        success: 'Imagem carregada com sucesso!',
+        error: 'Não foi possível carregar a imagem!'
+      })
     }
   }
 
   async function handleProfileSubmit(ev: any) {
     ev.preventDefault();
-    setSaved(false);
-    setIsSaving(true);
 
-    const response = await fetch("/api/profile", {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: userName,
-        email: email,
-        image: userImagem,
-      }),
+    const savingPromise = new Promise<void>(async (resolve, reject) => {
+      const response = await fetch("/api/profile", {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: userName,
+          email: email,
+          image: userImagem,
+        })
+      });
+
+      response.ok ? resolve() : reject();
+    });
+
+    await toast.promise(savingPromise, {
+      error: 'Erro ao salvar perfil ...',
+      success: 'Perfil salvo com sucesso!',
+      loading: 'Salvando perfil...'
     })
-
-    setIsSaving(false);
-
-    if (response.ok) {
-      setSaved(true);
-    }
   }
 
   if (status === "loading") {
     return "Carregendo seus dados ...";
-  }
-
-
-  if (status === "unauthenticated") {
-    redirect("/login");
   }
 
   const user = session.data?.user;
@@ -85,18 +96,6 @@ export default function ProfilePage() {
 
 
       <div className="max-w-md mx-auto">
-        {saved && (
-          <InfoBox text="Salvo com sucesso!" color="green" />
-        )}
-
-        {isSaving && (
-          <InfoBox text="Salvando ..." color="blue" />
-        )}
-
-        {isUploading && (
-          <InfoBox text="Carregando nova foto ..." color="blue" />
-        )}
-
         <div className="flex gap-4 items-center">
           <div>
             <div className=" p-2 rounded-lg relative max-w-[120px]">
