@@ -12,8 +12,6 @@ export default function ProfilePage() {
   const session = useSession();
   const { status } = session;
 
-  // TODO: https://viacep.com.br/ws/37990000/json/
-
   if (status === "unauthenticated") {
     toast.error('Usuario sem acesso!');
     redirect("/login");
@@ -23,6 +21,8 @@ export default function ProfilePage() {
   // TODO: em vez de toda vez fazer request no S3 ver opcao de colocar um loading ate a imagem aparecer
   const [userImagem, setUserImagem] = useState<string>("https://leonardo-pizzaapp.s3.sa-east-1.amazonaws.com/sem-foto-pizzaapp.png");
   const [email, setEmail] = useState<string>("");
+  const [disableViaCep, setDisableViaCep] = useState<boolean>(false);
+  const [disableEnderecoViaCep, setDisableEnderecoViaCep] = useState<boolean>(false);
 
   const [cep, setCep] = useState<string>("");
   const [endereco, setEndereco] = useState<string>("");
@@ -123,6 +123,30 @@ export default function ProfilePage() {
     })
   }
 
+  async function handleCEP(cep: string) {
+    if (cep.length === 8) {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      if (response.ok) {
+        const viaCep = await response.json();
+        if (viaCep.erro) {
+          toast.error('CEP inválido!');
+        } else {
+          setDisableEnderecoViaCep(false);
+          if (viaCep.logradouro !== "") {
+            setDisableEnderecoViaCep(true);
+          }
+          setDisableViaCep(true);
+          setEndereco(viaCep.logradouro);
+          setBairro(viaCep.bairro);
+          setCidade(viaCep.localidade);
+          setEstado(viaCep.uf);
+          setComplemento(viaCep.complemento);
+        }
+      }
+    }
+    setCep(cep)
+  }
+
   if (status === "loading") {
     return "Carregando seus dados ...";
   }
@@ -155,13 +179,13 @@ export default function ProfilePage() {
             <input type="email" name="email" id="email" placeholder="Email" disabled={true} defaultValue={user?.email || ""} />
 
             <label>CEP</label>
-            <input type="text" name="cep" id="cep" placeholder="CEP ..." value={cep} onChange={(e) => setCep(e.target.value)} />
+            <input type="text" name="cep" id="cep" placeholder="CEP ..." value={cep} onChange={(e) => handleCEP(e.target.value)} maxLength={8} minLength={8} />
 
             <label>Endereço</label>
-            <input type="text" name="endereco" id="endereco" placeholder="Endereço ..." value={endereco} onChange={(e) => setEndereco(e.target.value)} />
+            <input type="text" name="endereco" id="endereco" placeholder="Endereço ..." value={endereco} onChange={(e) => setEndereco(e.target.value)} disabled={disableEnderecoViaCep} />
 
             <label>Bairro</label>
-            <input type="text" name="bairro" id="bairro" placeholder="Bairro ..." value={bairro} onChange={(e) => setBairro(e.target.value)} />
+            <input type="text" name="bairro" id="bairro" placeholder="Bairro ..." value={bairro} onChange={(e) => setBairro(e.target.value)} disabled={disableEnderecoViaCep} />
 
             <div className="flex gap-3 mb-2">
               <div>
@@ -171,11 +195,11 @@ export default function ProfilePage() {
               <div>
 
                 <label>UF</label>
-                <input type="text" name="uf" id="uf" placeholder="Estado ..." value={estado} onChange={(e) => setEstado(e.target.value)} style={{ margin: 0 }} />
+                <input type="text" name="uf" id="uf" placeholder="Estado ..." value={estado} onChange={(e) => setEstado(e.target.value)} style={{ margin: 0 }} disabled={disableViaCep} />
               </div>
             </div>
             <label>Cidade</label>
-            <input type="text" name="cidade" id="cidade" placeholder="Cidade ..." value={cidade} onChange={(e) => setCidade(e.target.value)} />
+            <input type="text" name="cidade" id="cidade" placeholder="Cidade ..." value={cidade} onChange={(e) => setCidade(e.target.value)} disabled={disableViaCep} />
 
             <label>Complemento</label>
             <input type="text" name="complemento" id="complemento" placeholder="Complemento ..." value={complemento} onChange={(e) => setComplemento(e.target.value)} />
@@ -192,7 +216,7 @@ export default function ProfilePage() {
       </div>
 
       <p className="text-center mt-4 text-2xl">
-        https://youtu.be/nGoSP3MBV2E?t=16154
+        https://youtu.be/nGoSP3MBV2E?t=17561
       </p>
 
 
