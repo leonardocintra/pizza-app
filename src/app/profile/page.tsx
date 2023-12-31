@@ -6,10 +6,13 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { User } from "../models/User";
 
 export default function ProfilePage() {
   const session = useSession();
   const { status } = session;
+
+  // TODO: https://viacep.com.br/ws/37990000/json/
 
   if (status === "unauthenticated") {
     toast.error('Usuario sem acesso!');
@@ -21,14 +24,41 @@ export default function ProfilePage() {
   const [userImagem, setUserImagem] = useState<string>("https://leonardo-pizzaapp.s3.sa-east-1.amazonaws.com/sem-foto-pizzaapp.png");
   const [email, setEmail] = useState<string>("");
 
+  const [cep, setCep] = useState<string>("");
+  const [endereco, setEndereco] = useState<string>("");
+  const [bairro, setBairro] = useState<string>("");
+  const [cidade, setCidade] = useState<string>("");
+  const [estado, setEstado] = useState<string>("");
+  const [numero, setNumero] = useState<number>(0);
+  const [telefone, setTelefone] = useState<number>(0);
+  const [complemento, setComplemento] = useState<string>("CASA");
+  const [referencia, setReferencia] = useState<string>("");
+
+
   useEffect(() => {
     if (status === "authenticated") {
       setUserName(session.data.user?.name || "");
       setEmail(session.data.user?.email || "");
       setUserImagem(session.data.user?.image || "");
 
+      if (email) {
+        fetch(`/api/profile?email=${email}`).then(response => {
+          response.json().then(data => {
+            setCep(data.cep);
+            setEndereco(data.endereco);
+            setBairro(data.bairro);
+            setCidade(data.cidade);
+            setEstado(data.estado);
+            setNumero(data.numero);
+            setTelefone(data.telefone);
+            setComplemento(data.complemento);
+            setReferencia(data.referencia);
+          })
+        });
+      }
+
     }
-  }, [session, status])
+  }, [email, session, status])
 
   async function handleFileChange(ev: any) {
     const files = ev.target.files;
@@ -71,6 +101,15 @@ export default function ProfilePage() {
           name: userName,
           email: email,
           image: userImagem,
+          cep,
+          endereco,
+          bairro,
+          cidade,
+          uf: estado,
+          numero,
+          complemento,
+          referencia,
+          telefone,
         })
       });
 
@@ -85,7 +124,7 @@ export default function ProfilePage() {
   }
 
   if (status === "loading") {
-    return "Carregendo seus dados ...";
+    return "Carregando seus dados ...";
   }
 
   const user = session.data?.user;
@@ -96,7 +135,7 @@ export default function ProfilePage() {
 
 
       <div className="max-w-md mx-auto">
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4">
           <div>
             <div className=" p-2 rounded-lg relative max-w-[120px]">
 
@@ -109,9 +148,43 @@ export default function ProfilePage() {
             </div>
           </div>
           <form onSubmit={handleProfileSubmit} className="grow">
+            <label>Nome completo</label>
             <input type="text" name="name" id="name" placeholder="Nome completo" value={userName} onChange={(ev) => setUserName(ev.target.value)} />
 
+            <label>Email</label>
             <input type="email" name="email" id="email" placeholder="Email" disabled={true} defaultValue={user?.email || ""} />
+
+            <label>CEP</label>
+            <input type="text" name="cep" id="cep" placeholder="CEP ..." value={cep} onChange={(e) => setCep(e.target.value)} />
+
+            <label>Endereço</label>
+            <input type="text" name="endereco" id="endereco" placeholder="Endereço ..." value={endereco} onChange={(e) => setEndereco(e.target.value)} />
+
+            <label>Bairro</label>
+            <input type="text" name="bairro" id="bairro" placeholder="Bairro ..." value={bairro} onChange={(e) => setBairro(e.target.value)} />
+
+            <div className="flex gap-3 mb-2">
+              <div>
+                <label>Numero</label>
+                <input type="number" name="numero" id="numero" placeholder="Numero ..." value={numero} onChange={(e) => setNumero(parseInt(e.target.value))} style={{ margin: 0 }} />
+              </div>
+              <div>
+
+                <label>UF</label>
+                <input type="text" name="uf" id="uf" placeholder="Estado ..." value={estado} onChange={(e) => setEstado(e.target.value)} style={{ margin: 0 }} />
+              </div>
+            </div>
+            <label>Cidade</label>
+            <input type="text" name="cidade" id="cidade" placeholder="Cidade ..." value={cidade} onChange={(e) => setCidade(e.target.value)} />
+
+            <label>Complemento</label>
+            <input type="text" name="complemento" id="complemento" placeholder="Complemento ..." value={complemento} onChange={(e) => setComplemento(e.target.value)} />
+
+            <label>Referencia</label>
+            <input type="text" name="referencia" id="referencia" placeholder="Referencia ..." value={referencia} onChange={(e) => setReferencia(e.target.value)} />
+
+            <label>Telefone</label>
+            <input type="tel" name="telefone" id="telefone" placeholder="telefone" value={telefone} onChange={(e) => setTelefone(parseInt(e.target.value))} />
 
             <button type="submit">Salvar</button>
           </form>

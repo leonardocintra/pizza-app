@@ -1,31 +1,26 @@
 import mongoose from "mongoose";
 import { User } from "@/app/models/User";
+import { NextRequest } from "next/server";
 
-type UpdateProfile = {
-  name?: string;
-  image?: string;
+
+export async function GET(request: NextRequest) {
+  mongoose.connect(process.env.MONGODB_URI as string)
+
+  const { searchParams } = new URL(request.url);
+  const email = searchParams.get("email");
+  const user = await User.findOne({ email });
+  
+  return Response.json(user, { status: 200 });
 }
 
 export async function PUT(req: any) {
   const data = await req.json();
 
-  const update: UpdateProfile = {};
-
-  if ('name' in data) {
-    update.name = data.name
-  }
-
-  if ('image' in data) {
-    update.image = data.image
-  }
-
-  if (Object.keys(update).length > 0 && 'email' in data) {
+  if ('email' in data) {
     mongoose.connect(process.env.MONGODB_URI as string)
 
-    console.log('ronaldo')
-
     const email = data.email;
-    await User.updateOne({ email }, update)
+    await User.updateOne({ email }, data)
 
     return Response.json(true, { status: 200 });
   } else {

@@ -9,13 +9,17 @@ section.hero {
 
 input[type="email"],
 input[type="password"],
+input[type="number"],
+input[type="tel"],
 input[type="text"] {
-  @apply block w-full rounded-xl my-2;
+  @apply block w-full rounded-xl mb-3;
   @apply border p-2 border-gray-300 bg-gray-200;
 }
 
 input[type="email"]:disabled,
 input[type="password"]:disabled,
+input[type="number"]:disabled,
+input[type="tel"]:disabled,
 input[type="text"]:disabled {
   @apply bg-gray-200 cursor-not-allowed border-0 text-gray-500;
 }
@@ -24,6 +28,7 @@ button {
   @apply block w-full text-gray-700 font-semibold;
   @apply border rounded-2xl border-gray-300 px-6 py-2;
 }
+
 button[type="submit"],
 .submit {
   @apply border-0 bg-primary text-white;
@@ -32,4 +37,12 @@ button[type="submit"],
 button[type="submit"]:disabled,
 .submit:disabled {
   @apply cursor-not-allowed bg-red-400;
+}
+
+label {
+  @apply text-gray-500 text-sm leading-tight
+}
+
+label + input {
+  margin-top: -2px;
 }

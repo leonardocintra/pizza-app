@@ -4,6 +4,15 @@ import { Schema, model, models } from "mongoose";
 const UserSchema = new Schema({
   name: { type: String },
   image: { type: String },
+  endereco: { type: String },
+  uf: { type: String },
+  cep: { type: String },
+  numero: { type: String },
+  bairro: { type: String },
+  cidade: { type: String },
+  referencia: { type: String },
+  complemento: { type: String },
+  telefone: { type: String },
   email: {
     type: String,
     required: true,
