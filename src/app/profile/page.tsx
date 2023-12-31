@@ -5,6 +5,7 @@ import PageTitle from "../components/layout/PageTitle";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import InfoBox from "../components/layout/InfoBox";
 
 export default function ProfilePage() {
   const session = useSession();
@@ -85,15 +86,15 @@ export default function ProfilePage() {
 
       <div className="max-w-md mx-auto">
         {saved && (
-          <h2 className="text-center bg-green-200 p-4 rounded-lg border-4 border-green-400 text-green-800">Perfil salvo com sucesso!</h2>
+          <InfoBox text="Salvo com sucesso!" color="green" />
         )}
 
         {isSaving && (
-          <h2 className="text-center bg-blue-200 p-4 rounded-lg border-4 border-blue-400 text-blue-800">Salvando seus dados ...</h2>
+          <InfoBox text="Salvando ..." color="blue" />
         )}
 
         {isUploading && (
-          <h2 className="text-center bg-blue-200 p-4 rounded-lg border-4 border-blue-400 text-blue-800">Salvando nova foto ...</h2>
+          <InfoBox text="Carregando nova foto ..." color="blue" />
         )}
 
         <div className="flex gap-4 items-center">
