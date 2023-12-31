@@ -118,8 +118,8 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <p>
-        Parei em https://youtu.be/nGoSP3MBV2E?t=14892
+      <p className="text-center mt-4 text-2xl">
+        https://youtu.be/nGoSP3MBV2E?t=16154
       </p>
 
 
