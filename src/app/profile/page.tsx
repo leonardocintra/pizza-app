@@ -12,6 +12,7 @@ export default function ProfilePage() {
   const { status } = session;
   const [saved, setSaved] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
   // TODO: em vez de toda vez fazer request no S3 ver opcao de colocar um loading ate a imagem aparecer
   const [userImagem, setUserImagem] = useState<string>("https://leonardo-pizzaapp.s3.sa-east-1.amazonaws.com/sem-foto-pizzaapp.png");
@@ -32,6 +33,7 @@ export default function ProfilePage() {
     if (files?.length === 1) {
       const data = new FormData;
       data.set('file', files[0]);
+      setIsUploading(true);
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: data
@@ -39,8 +41,7 @@ export default function ProfilePage() {
 
       const linkImagem = await response.json();
       setUserImagem(linkImagem);
-
-
+      setIsUploading(false);
     }
   }
 
@@ -89,6 +90,10 @@ export default function ProfilePage() {
 
         {isSaving && (
           <h2 className="text-center bg-blue-200 p-4 rounded-lg border-4 border-blue-400 text-blue-800">Salvando seus dados ...</h2>
+        )}
+
+        {isUploading && (
+          <h2 className="text-center bg-blue-200 p-4 rounded-lg border-4 border-blue-400 text-blue-800">Salvando nova foto ...</h2>
         )}
 
         <div className="flex gap-4 items-center">

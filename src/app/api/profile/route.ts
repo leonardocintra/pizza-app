@@ -15,12 +15,14 @@ export async function PUT(req: any) {
     update.name = data.name
   }
 
-  if ('imagem' in data) {
+  if ('image' in data) {
     update.image = data.image
   }
 
   if (Object.keys(update).length > 0 && 'email' in data) {
     mongoose.connect(process.env.MONGODB_URI as string)
+
+    console.log('ronaldo')
 
     const email = data.email;
     await User.updateOne({ email }, update)
