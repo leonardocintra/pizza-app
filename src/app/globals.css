@@ -43,6 +43,14 @@ label {
   @apply text-gray-500 text-sm leading-tight
 }
 
-label + input {
+label+input {
   margin-top: -2px;
+}
+
+div.tabs>* {
+  @apply bg-gray-500 text-gray-100 rounded-full py-2 px-4
+}
+
+div.tabs>*.active {
+  @apply bg-primary text-white
 }

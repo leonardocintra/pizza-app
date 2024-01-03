@@ -1,12 +1,11 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import PageTitle from "../components/layout/PageTitle";
+import UserTabs from "../components/layout/UserTabs";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { User } from "../models/User";
 
 export default function ProfilePage() {
   const session = useSession();
@@ -33,6 +32,8 @@ export default function ProfilePage() {
   const [telefone, setTelefone] = useState<number>(0);
   const [complemento, setComplemento] = useState<string>("CASA");
   const [referencia, setReferencia] = useState<string>("");
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [profileFetched, setProfileFetched] = useState<boolean>(false);
 
 
   useEffect(() => {
@@ -48,11 +49,13 @@ export default function ProfilePage() {
             setEndereco(data.endereco);
             setBairro(data.bairro);
             setCidade(data.cidade);
-            setEstado(data.estado);
+            setEstado(data.uf);
             setNumero(data.numero);
             setTelefone(data.telefone);
             setComplemento(data.complemento);
             setReferencia(data.referencia);
+            setIsAdmin(data.isAdmin);
+            setProfileFetched(true);
           })
         });
       }
@@ -147,7 +150,7 @@ export default function ProfilePage() {
     setCep(cep)
   }
 
-  if (status === "loading") {
+  if (status === "loading" || !profileFetched) {
     return "Carregando seus dados ...";
   }
 
@@ -155,7 +158,7 @@ export default function ProfilePage() {
 
   return (
     <section className="mt-8">
-      <PageTitle title="Minha conta" />
+      <UserTabs isAdmin={isAdmin} />
 
 
       <div className="max-w-md mx-auto">
@@ -195,7 +198,7 @@ export default function ProfilePage() {
               <div>
 
                 <label>UF</label>
-                <input type="text" name="uf" id="uf" placeholder="Estado ..." value={estado} onChange={(e) => setEstado(e.target.value)} style={{ margin: 0 }} disabled={disableViaCep} />
+                <input type="text" name="uf" id="uf" placeholder="Estado ..." value={estado} onChange={(ev) => setEstado(ev.target.value)} style={{ margin: 0 }} disabled={disableViaCep} />
               </div>
             </div>
             <label>Cidade</label>
@@ -209,6 +212,7 @@ export default function ProfilePage() {
 
             <label>Telefone</label>
             <input type="tel" name="telefone" id="telefone" placeholder="telefone" value={telefone} onChange={(e) => setTelefone(parseInt(e.target.value))} />
+
 
             <button type="submit">Salvar</button>
           </form>

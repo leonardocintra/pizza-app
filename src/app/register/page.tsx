@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
-import PageTitle from "../components/layout/PageTitle";
+import UserTabs from "../components/layout/UserTabs";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -43,7 +43,7 @@ export default function RegisterPage() {
 
   return (
     <section className="mt-8">
-      <PageTitle title="Registrar" />
+      <UserTabs />
 
       {userCreated && (
         <div className="my-4 text-center">

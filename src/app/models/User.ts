@@ -13,6 +13,7 @@ const UserSchema = new Schema({
   referencia: { type: String },
   complemento: { type: String },
   telefone: { type: String },
+  isAdmin: { type: Boolean, default: false },
   email: {
     type: String,
     required: true,

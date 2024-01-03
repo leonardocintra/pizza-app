@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { FormEvent, useState } from "react";
-import PageTitle from "../components/layout/PageTitle";
+import UserTabs from "../components/layout/UserTabs";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -25,7 +25,7 @@ export default function LoginPage() {
 
   return (
     <section className="mt-8">
-      <PageTitle title="Entrar / Login" />
+      <UserTabs />
 
       <form className="max-w-xs mx-auto" onSubmit={handleFormSubmit}>
         <input
