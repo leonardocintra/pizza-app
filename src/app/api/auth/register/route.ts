@@ -11,5 +11,3 @@ export async function POST(req: any) {
 
   return Response.json(createUser, { status: 201 })
 }
-
-// Youtube: https://youtu.be/nGoSP3MBV2E?t=9944

@@ -10,6 +10,7 @@ export default function CategoriesPage() {
   const [categoryName, setCategoryName] = useState<string>("");
   const { isAdmin, userAdminLoading } = UserProfileAuth();
 
+
   async function handleNewCategory(ev: any) {
     ev.preventDefault();
 
