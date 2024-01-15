@@ -16,7 +16,7 @@ export default function CategoriesPage() {
 
   useEffect(() => {
     fetchCategories();
-  });
+  }, []);
 
   function fetchCategories() {
     fetch("/api/categories").then((res) =>
