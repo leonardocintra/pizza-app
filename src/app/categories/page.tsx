@@ -4,12 +4,15 @@ import { useEffect, useState } from "react";
 import UserTabs from "../components/layout/UserTabs";
 import { UserProfileAuth } from "../components/UserProfileAuth";
 import toast from "react-hot-toast";
+import { CategoryDocument } from "../models/Category";
 
 export default function CategoriesPage() {
   const [categoryName, setCategoryName] = useState<string>("");
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<CategoryDocument[]>();
   const { isAdmin, userAdminLoading } = UserProfileAuth();
-  const [editedCategory, setEditedCategory] = useState(null);
+  const [editedCategory, setEditedCategory] = useState<CategoryDocument | null>(
+    null
+  );
 
   useEffect(() => {
     fetchCategories();
@@ -27,7 +30,7 @@ export default function CategoriesPage() {
     ev.preventDefault();
 
     const creationPromise = new Promise<void>(async (resolve, reject) => {
-      const data = { name: categoryName };
+      const data: Partial<CategoryDocument> = { name: categoryName };
 
       if (editedCategory) {
         data._id = editedCategory._id;
@@ -43,7 +46,7 @@ export default function CategoriesPage() {
 
       setCategoryName("");
       setEditedCategory(null);
-      
+
       if (response.ok) {
         resolve();
         fetchCategories();
@@ -100,14 +103,14 @@ export default function CategoriesPage() {
       </form>
       <div>
         <h2 className="mt-8 text-sm text-gray-500">Editar categorias</h2>
-        {categories?.length > 0 &&
-          categories.map((c, index) => (
+        {categories &&
+          categories.map((c: CategoryDocument) => (
             <button
               onClick={() => {
                 setEditedCategory(c);
                 setCategoryName(c.name);
               }}
-              key={index}
+              key={c._id}
               className="bg-gray-200 rounded-xl p-2 px-4 flex gap-1 cursor-pointer mb-1"
             >
               <span>{c.name}</span>
