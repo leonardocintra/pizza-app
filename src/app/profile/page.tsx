@@ -3,25 +3,28 @@
 import { useSession } from "next-auth/react";
 import UserTabs from "../components/layout/UserTabs";
 import { redirect } from "next/navigation";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import EditableImage from "../components/layout/EditableImage";
 
 export default function ProfilePage() {
   const session = useSession();
   const { status } = session;
 
   if (status === "unauthenticated") {
-    toast.error('Usuario sem acesso!');
+    toast.error("Usuario sem acesso!");
     redirect("/login");
   }
 
   const [userName, setUserName] = useState<string>("");
   // TODO: em vez de toda vez fazer request no S3 ver opcao de colocar um loading ate a imagem aparecer
-  const [userImagem, setUserImagem] = useState<string>("https://leonardo-pizzaapp.s3.sa-east-1.amazonaws.com/sem-foto-pizzaapp.png");
+  const [userImagem, setUserImagem] = useState<string>(
+    "https://leonardo-pizzaapp.s3.sa-east-1.amazonaws.com/sem-foto-pizzaapp.png"
+  );
   const [email, setEmail] = useState<string>("");
   const [disableViaCep, setDisableViaCep] = useState<boolean>(false);
-  const [disableEnderecoViaCep, setDisableEnderecoViaCep] = useState<boolean>(false);
+  const [disableEnderecoViaCep, setDisableEnderecoViaCep] =
+    useState<boolean>(false);
 
   const [cep, setCep] = useState<string>("");
   const [endereco, setEndereco] = useState<string>("");
@@ -35,7 +38,6 @@ export default function ProfilePage() {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [profileFetched, setProfileFetched] = useState<boolean>(false);
 
-
   useEffect(() => {
     if (status === "authenticated") {
       setUserName(session.data.user?.name || "");
@@ -43,8 +45,8 @@ export default function ProfilePage() {
       setUserImagem(session.data.user?.image || "");
 
       if (email) {
-        fetch(`/api/profile?email=${email}`).then(response => {
-          response.json().then(data => {
+        fetch(`/api/profile?email=${email}`).then((response) => {
+          response.json().then((data) => {
             setCep(data.cep);
             setEndereco(data.endereco);
             setBairro(data.bairro);
@@ -56,50 +58,19 @@ export default function ProfilePage() {
             setReferencia(data.referencia);
             setIsAdmin(data.isAdmin);
             setProfileFetched(true);
-          })
+          });
         });
       }
-
     }
-  }, [email, session, status])
-
-  async function handleFileChange(ev: any) {
-    const files = ev.target.files;
-
-    if (files?.length === 1) {
-      const data = new FormData;
-      data.set('file', files[0]);
-
-      const uploadingPromise = new Promise<void>(async (resolve, reject) => {
-        const response = await fetch('/api/upload', {
-          method: 'POST',
-          body: data
-        });
-
-        if (response.ok) {
-          const linkImagem = await response.json();
-          setUserImagem(linkImagem);
-          resolve();
-        } else {
-          reject(response.statusText);
-        }
-      })
-
-      toast.promise(uploadingPromise, {
-        loading: 'Carregando imagem...',
-        success: 'Imagem carregada com sucesso!',
-        error: 'Não foi possível carregar a imagem!'
-      })
-    }
-  }
+  }, [email, session, status]);
 
   async function handleProfileSubmit(ev: any) {
     ev.preventDefault();
 
     const savingPromise = new Promise<void>(async (resolve, reject) => {
       const response = await fetch("/api/profile", {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: userName,
           email: email,
@@ -113,17 +84,17 @@ export default function ProfilePage() {
           complemento,
           referencia,
           telefone,
-        })
+        }),
       });
 
       response.ok ? resolve() : reject();
     });
 
     await toast.promise(savingPromise, {
-      error: 'Erro ao salvar perfil ...',
-      success: 'Perfil salvo com sucesso!',
-      loading: 'Salvando perfil...'
-    })
+      error: "Erro ao salvar perfil ...",
+      success: "Perfil salvo com sucesso!",
+      loading: "Salvando perfil...",
+    });
   }
 
   async function handleCEP(cep: string) {
@@ -132,7 +103,7 @@ export default function ProfilePage() {
       if (response.ok) {
         const viaCep = await response.json();
         if (viaCep.erro) {
-          toast.error('CEP inválido!');
+          toast.error("CEP inválido!");
         } else {
           setDisableEnderecoViaCep(false);
           if (viaCep.logradouro !== "") {
@@ -147,7 +118,7 @@ export default function ProfilePage() {
         }
       }
     }
-    setCep(cep)
+    setCep(cep);
   }
 
   if (status === "loading" || !profileFetched) {
@@ -160,59 +131,135 @@ export default function ProfilePage() {
     <section className="mt-8">
       <UserTabs isAdmin={isAdmin} />
 
-
       <div className="max-w-md mx-auto">
         <div className="flex gap-4">
           <div>
-            <div className=" p-2 rounded-lg relative max-w-[120px]">
-
-              <Image priority={false} className="rounded-lg w-full h-full mb-1" src={userImagem} alt="User image" width={250} height={250} />
-
-              <label>
-                <input type="file" name="photo" id="photo" className="hidden" onChange={handleFileChange} />
-                <span className="block text-center border border-gray-500 text-sm rounded-lg p-1 cursor-pointer">Editar</span>
-              </label>
+            <div className="p-2 rounded-lg relative max-w-[120px]">
+              <EditableImage link={userImagem} setUserImagem={setUserImagem} />
             </div>
           </div>
           <form onSubmit={handleProfileSubmit} className="grow">
             <label>Nome completo</label>
-            <input type="text" name="name" id="name" placeholder="Nome completo" value={userName} onChange={(ev) => setUserName(ev.target.value)} />
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Nome completo"
+              value={userName}
+              onChange={(ev) => setUserName(ev.target.value)}
+            />
 
             <label>Email</label>
-            <input type="email" name="email" id="email" placeholder="Email" disabled={true} defaultValue={user?.email || ""} />
+            <input
+              type="email"
+              name="email"
+              id="email"
+              placeholder="Email"
+              disabled={true}
+              defaultValue={user?.email || ""}
+            />
 
             <label>CEP</label>
-            <input type="text" name="cep" id="cep" placeholder="CEP ..." value={cep} onChange={(e) => handleCEP(e.target.value)} maxLength={8} minLength={8} />
+            <input
+              type="text"
+              name="cep"
+              id="cep"
+              placeholder="CEP ..."
+              value={cep}
+              onChange={(e) => handleCEP(e.target.value)}
+              maxLength={8}
+              minLength={8}
+            />
 
             <label>Endereço</label>
-            <input type="text" name="endereco" id="endereco" placeholder="Endereço ..." value={endereco} onChange={(e) => setEndereco(e.target.value)} disabled={disableEnderecoViaCep} />
+            <input
+              type="text"
+              name="endereco"
+              id="endereco"
+              placeholder="Endereço ..."
+              value={endereco}
+              onChange={(e) => setEndereco(e.target.value)}
+              disabled={disableEnderecoViaCep}
+            />
 
             <label>Bairro</label>
-            <input type="text" name="bairro" id="bairro" placeholder="Bairro ..." value={bairro} onChange={(e) => setBairro(e.target.value)} disabled={disableEnderecoViaCep} />
+            <input
+              type="text"
+              name="bairro"
+              id="bairro"
+              placeholder="Bairro ..."
+              value={bairro}
+              onChange={(e) => setBairro(e.target.value)}
+              disabled={disableEnderecoViaCep}
+            />
 
             <div className="flex gap-3 mb-2">
               <div>
                 <label>Numero</label>
-                <input type="number" name="numero" id="numero" placeholder="Numero ..." value={numero} onChange={(e) => setNumero(parseInt(e.target.value))} style={{ margin: 0 }} />
+                <input
+                  type="number"
+                  name="numero"
+                  id="numero"
+                  placeholder="Numero ..."
+                  value={numero}
+                  onChange={(e) => setNumero(parseInt(e.target.value))}
+                  style={{ margin: 0 }}
+                />
               </div>
               <div>
-
                 <label>UF</label>
-                <input type="text" name="uf" id="uf" placeholder="Estado ..." value={estado} onChange={(ev) => setEstado(ev.target.value)} style={{ margin: 0 }} disabled={disableViaCep} />
+                <input
+                  type="text"
+                  name="uf"
+                  id="uf"
+                  placeholder="Estado ..."
+                  value={estado}
+                  onChange={(ev) => setEstado(ev.target.value)}
+                  style={{ margin: 0 }}
+                  disabled={disableViaCep}
+                />
               </div>
             </div>
             <label>Cidade</label>
-            <input type="text" name="cidade" id="cidade" placeholder="Cidade ..." value={cidade} onChange={(e) => setCidade(e.target.value)} disabled={disableViaCep} />
+            <input
+              type="text"
+              name="cidade"
+              id="cidade"
+              placeholder="Cidade ..."
+              value={cidade}
+              onChange={(e) => setCidade(e.target.value)}
+              disabled={disableViaCep}
+            />
 
             <label>Complemento</label>
-            <input type="text" name="complemento" id="complemento" placeholder="Complemento ..." value={complemento} onChange={(e) => setComplemento(e.target.value)} />
+            <input
+              type="text"
+              name="complemento"
+              id="complemento"
+              placeholder="Complemento ..."
+              value={complemento}
+              onChange={(e) => setComplemento(e.target.value)}
+            />
 
             <label>Referencia</label>
-            <input type="text" name="referencia" id="referencia" placeholder="Referencia ..." value={referencia} onChange={(e) => setReferencia(e.target.value)} />
+            <input
+              type="text"
+              name="referencia"
+              id="referencia"
+              placeholder="Referencia ..."
+              value={referencia}
+              onChange={(e) => setReferencia(e.target.value)}
+            />
 
             <label>Telefone</label>
-            <input type="tel" name="telefone" id="telefone" placeholder="telefone" value={telefone} onChange={(e) => setTelefone(parseInt(e.target.value))} />
-
+            <input
+              type="tel"
+              name="telefone"
+              id="telefone"
+              placeholder="telefone"
+              value={telefone}
+              onChange={(e) => setTelefone(parseInt(e.target.value))}
+            />
 
             <button type="submit">Salvar</button>
           </form>
@@ -220,11 +267,8 @@ export default function ProfilePage() {
       </div>
 
       <p className="text-center mt-4 text-2xl">
-      https://youtu.be/nGoSP3MBV2E?t=21729
+        https://youtu.be/nGoSP3MBV2E?t=21729
       </p>
-
-
     </section>
-
-  )
+  );
 }

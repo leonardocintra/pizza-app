@@ -1,10 +1,9 @@
-"use client"
+"use client";
 
 import UserTabs from "../components/layout/UserTabs";
 import { UserProfileAuth } from "../components/UserProfileAuth";
 
 export default function CategoriesPage() {
-
   const { isAdmin, userAdminLoading } = UserProfileAuth();
 
   if (userAdminLoading) {
@@ -18,7 +17,23 @@ export default function CategoriesPage() {
   return (
     <section className="max-w-lg mx-auto mt-8">
       <UserTabs isAdmin={isAdmin} />
-      Menu Items
+      <form className="mt-8 max-w-md mx-auto">
+        <div className="flex items-start gap-4">
+          <div>
+            Imagem
+          </div>
+          <div className="grow">
+            <label>Nome do item</label>
+            <input type="text" name="item-name" id="item-name" />
+            <label>Descrição</label>
+            <input type="text" name="item-name" id="item-name" />
+            <label>Preço base</label>
+            <input type="text" name="item-name" id="item-name" />
+
+            <button type="submit">Salvar</button>
+          </div>
+        </div>
+      </form>
     </section>
   );
 }
