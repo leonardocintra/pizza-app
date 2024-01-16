@@ -3,11 +3,23 @@
 import Link from "next/link";
 import UserTabs from "../components/layout/UserTabs";
 import { UserProfileAuth } from "../components/UserProfileAuth";
-import toast from "react-hot-toast";
 import RightIcon from "../components/icons/RigthIcon";
+import { useEffect, useState } from "react";
+import { MenuItemDocument } from "../models/MenuItem";
+import Image from "next/image";
 
 export default function CategoriesPage() {
   const { isAdmin, userAdminLoading } = UserProfileAuth();
+
+  const [menuItens, setMenuItens] = useState<MenuItemDocument[]>();
+
+  useEffect(() => {
+    fetch("/api/menu-items").then((res) =>
+      res.json().then((data) => {
+        setMenuItens(data);
+      })
+    );
+  }, []);
 
   if (userAdminLoading) {
     return <div>Validando dados de usuario ...</div>;
@@ -25,6 +37,31 @@ export default function CategoriesPage() {
           Criar novo item
           <RightIcon classname={"w-6 h-6"} />
         </Link>
+      </div>
+
+      <div>
+        <h2 className="text-sm text-gray-500 mt-8">Editar itens do menu</h2>
+        <div className="grid grid-cols-3 gap-2">
+          {menuItens &&
+            menuItens.map((item: MenuItemDocument) => (
+              <Link
+                key={item._id}
+                href={`/menu-itens/editar/${item._id}`}
+                className="bg-gray-300 rounded-lg p-4"
+              >
+                <div className="relative">
+                  <Image
+                    className="rounded-md"
+                    src={item.image}
+                    alt={item.name}
+                    height={100}
+                    width={100}
+                  />
+                </div>
+                <div className="text-center">{item.name}</div>
+              </Link>
+            ))}
+        </div>
       </div>
     </section>
   );

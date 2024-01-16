@@ -9,3 +9,8 @@ export async function POST(req: Request) {
 
   return Response.json(menuItemDoc, { status: 201 });
 }
+
+export async function GET(req: Request) {
+  mongoose.connect(process.env.MONGODB_URI as string);
+  return Response.json(await MenuItem.find());
+}
