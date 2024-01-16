@@ -3,11 +3,11 @@ import toast from "react-hot-toast";
 
 type EditableImageProps = {
   link: string;
-  setUserImagem: (value: string) => void;
+  setImage: (value: string) => void;
 };
 
 export default function EditableImage(props: EditableImageProps) {
-  
+
   async function handleFileChange(ev: any) {
     const files = ev.target.files;
 
@@ -23,7 +23,7 @@ export default function EditableImage(props: EditableImageProps) {
 
         if (response.ok) {
           const linkImagem = await response.json();
-          props.setUserImagem(linkImagem);
+          props.setImage(linkImagem);
           resolve();
         } else {
           reject(response.statusText);

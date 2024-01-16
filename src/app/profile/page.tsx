@@ -135,7 +135,7 @@ export default function ProfilePage() {
         <div className="flex gap-4">
           <div>
             <div className="p-2 rounded-lg relative max-w-[120px]">
-              <EditableImage link={userImagem} setUserImagem={setUserImagem} />
+              <EditableImage link={userImagem} setImage={setUserImagem} />
             </div>
           </div>
           <form onSubmit={handleProfileSubmit} className="grow">

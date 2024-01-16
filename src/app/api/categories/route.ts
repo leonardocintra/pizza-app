@@ -1,7 +1,10 @@
 import { Category } from "@/app/models/Category";
+import mongoose from "mongoose";
 import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
+  mongoose.connect(process.env.MONGODB_URI as string);
+
   const { name } = await req.json();
   const categoryDoc = await Category.create({ name });
 
@@ -9,6 +12,8 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
+  mongoose.connect(process.env.MONGODB_URI as string);
+
   const { _id, name } = await req.json();
   await Category.updateOne({ _id }, { name });
 
@@ -16,5 +21,7 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
+  mongoose.connect(process.env.MONGODB_URI as string)
+  
   return Response.json(await Category.find(), { status: 200 });
 }
