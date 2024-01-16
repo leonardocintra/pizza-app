@@ -4,16 +4,27 @@ import { UserProfileAuth } from "@/app/components/UserProfileAuth";
 import LeftIcon from "@/app/components/icons/LeftIcon";
 import MenuItemForm from "@/app/components/layout/MenuItemForm";
 import UserTabs from "@/app/components/layout/UserTabs";
-import { MenuItemDocument } from "@/app/models/MenuItem";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { useState } from "react";
+import { redirect, useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export default function NovoItemPage() {
+export default function EditarItemPage() {
   const { isAdmin, userAdminLoading } = UserProfileAuth();
+  const { id } = useParams();
 
+  const [menuItems, setMenuItems] = useState();
   const [redirectPage, setRedirectPage] = useState<boolean>(false);
+
+  useEffect(() => {
+    // TODO: fazer um GET by id em vez de trazer tudo e filtrar o id
+    fetch("/api/menu-items").then((res) =>
+      res.json().then((data) => {
+        const item = data.find((i: any) => i._id === id);
+        setMenuItems(item);
+      })
+    );
+  }, [id]);
 
   if (userAdminLoading) {
     return <div>Validando dados de usuario ...</div>;
@@ -27,16 +38,14 @@ export default function NovoItemPage() {
     return redirect("/menu-itens");
   }
 
-  async function handleFormSubmit(ev: any, data: MenuItemDocument) {
+  async function handleFormSubmit(ev: any, data: any) {
     ev.preventDefault();
 
-    if (data.image === "") {
-      data.image = "/item-sem-foto.jpg";
-    }
+    data = { _id: id, ...data };
 
     const savingPromise = new Promise<void>(async (resolve, reject) => {
       const response = await fetch("/api/menu-items", {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
@@ -64,7 +73,7 @@ export default function NovoItemPage() {
           Voltar para listagens
         </Link>
       </div>
-      <MenuItemForm menuItem={null} handleFormSubmit={handleFormSubmit} />
+      <MenuItemForm handleFormSubmit={handleFormSubmit} menuItem={menuItems} />
     </section>
   );
 }

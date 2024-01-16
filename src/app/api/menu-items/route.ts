@@ -14,3 +14,12 @@ export async function GET(req: Request) {
   mongoose.connect(process.env.MONGODB_URI as string);
   return Response.json(await MenuItem.find());
 }
+
+export async function PUT(req: Request) {
+  mongoose.connect(process.env.MONGODB_URI as string);
+  const { _id, ...data } = await req.json();
+
+  await MenuItem.findByIdAndUpdate(_id, data);
+
+  return Response.json(true);
+}
