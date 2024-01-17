@@ -1,13 +1,22 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { SizesType } from "../types/SizesType";
+import { IngredientsType } from "../types/IngredientsType";
 
 interface IMenuItem {
   name: string;
   basePrice: number;
   description: string;
   image: string;
+  sizes: SizesType[];
+  ingredients: IngredientsType[];
 }
 
 export interface MenuItemDocument extends IMenuItem, Document {}
+
+const MenuPropertiesSchema = new Schema({
+  name: String,
+  price: Number,
+});
 
 const menuItemSchema = new Schema<MenuItemDocument>(
   {
@@ -15,6 +24,8 @@ const menuItemSchema = new Schema<MenuItemDocument>(
     basePrice: { type: Number, required: true },
     description: { type: String },
     image: { type: String },
+    sizes: [MenuPropertiesSchema],
+    ingredients: [MenuPropertiesSchema],
   },
   { timestamps: true }
 );
