@@ -29,6 +29,9 @@ export default function CategoriesPage() {
   }
 
   async function handleDeleteCategory(id: string) {
+    setEditedCategory(null);
+    setCategoryName("");
+    
     const deletePromise = new Promise<void>(async (resolve, reject) => {
       const response = await fetch(`/api/categories?id=${id}`, {
         method: "DELETE",
@@ -120,9 +123,18 @@ export default function CategoriesPage() {
               onChange={(ev) => setCategoryName(ev.target.value)}
             />
           </div>
-          <div className="pb-3">
+          <div className="pb-3 flex gap-2">
             <button type="submit">
-              {editedCategory ? "Editar categoria" : "Salvar categoria"}
+              {editedCategory ? "Editar" : "Salvar"}
+            </button>
+            <button
+              onClick={() => {
+                setCategoryName("");
+                setEditedCategory(null);
+              }}
+              type="button"
+            >
+              Cancelar
             </button>
           </div>
         </div>
