@@ -2,6 +2,7 @@
 
 import { UserProfileAuth } from "@/app/components/UserProfileAuth";
 import LeftIcon from "@/app/components/icons/LeftIcon";
+import DeleteButton from "@/app/components/layout/Button/DeleteButton";
 import MenuItemForm from "@/app/components/layout/MenuItemForm";
 import UserTabs from "@/app/components/layout/UserTabs";
 import { MenuItemDocument } from "@/app/models/MenuItem";
@@ -65,6 +66,30 @@ export default function EditarItemPage() {
     setRedirectPage(true);
   }
 
+  async function handleDeleteItem(id: string) {
+    const deletePromise = new Promise<void>(async (resolve, reject) => {
+      const response = await fetch(`/api/menu-items?id=${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        resolve();
+        setRedirectPage(true);
+      } else {
+        reject();
+      }
+    });
+
+    await toast.promise(deletePromise, {
+      loading: "Deletando item...",
+      success: "Item excluido com sucesso!",
+      error: "Não foi possível excluir o item!",
+    });
+  }
+
   return (
     <section className="max-w-lg mx-auto mt-8">
       <UserTabs isAdmin={isAdmin} />
@@ -75,6 +100,14 @@ export default function EditarItemPage() {
         </Link>
       </div>
       <MenuItemForm handleFormSubmit={handleFormSubmit} menuItem={menuItems} />
+      <div className=" max-w-md mx-auto mt-4">
+        <div className="max-w-xs ml-auto pl-4">
+          <DeleteButton
+            label="Excluir esse item"
+            onDelete={() => handleDeleteItem(menuItems?._id)}
+          />
+        </div>
+      </div>
     </section>
   );
 }

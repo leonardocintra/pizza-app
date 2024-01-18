@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { CategoryDocument } from "../models/Category";
 import TrashIcon from "../components/icons/TrashIcon";
 import EditIcon from "../components/icons/EditIcon";
+import DeleteButton from "../components/layout/Button/DeleteButton";
 
 export default function CategoriesPage() {
   const [categoryName, setCategoryName] = useState<string>("");
@@ -31,7 +32,7 @@ export default function CategoriesPage() {
   async function handleDeleteCategory(id: string) {
     setEditedCategory(null);
     setCategoryName("");
-    
+
     const deletePromise = new Promise<void>(async (resolve, reject) => {
       const response = await fetch(`/api/categories?id=${id}`, {
         method: "DELETE",
@@ -159,12 +160,10 @@ export default function CategoriesPage() {
                   <EditIcon classname="w-6 h-6" />
                 </button>
 
-                <button
-                  type="button"
-                  onClick={() => handleDeleteCategory(c._id)}
-                >
-                  <TrashIcon classname="w-6 h-6" />
-                </button>
+                <DeleteButton
+                  label=""
+                  onDelete={() => handleDeleteCategory(c._id)}
+                />
               </div>
             </div>
           ))}
