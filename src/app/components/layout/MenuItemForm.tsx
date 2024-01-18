@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import EditableImage from "./EditableImage";
 import { SizesType } from "@/app/types/SizesType";
 import MenuItemFormProperties from "./MenuItemFormProperties";
 import { IngredientsType } from "@/app/types/IngredientsType";
 import { MenuItemDocument } from "@/app/models/MenuItem";
+import { CategoryDocument } from "@/app/models/Category";
 
 type MenuItemFormProps = {
   handleFormSubmit: any;
@@ -25,17 +26,39 @@ export default function MenuItemForm(props: MenuItemFormProps) {
   const [ingredients, setIngredients] = useState<IngredientsType[]>(
     props.menuItem?.ingredients || []
   );
+  const [categories, setCategories] = useState<CategoryDocument[]>();
+  const [category, setCategory] = useState<CategoryDocument | undefined>(
+    props.menuItem?.category
+  );
 
   useEffect(() => {
-    if (props.menuItem) {
+    fetch("/api/categories").then((response) => {
+      response.json().then((categories) => {
+        setCategories(categories);
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (props.menuItem && categories) {
       setName(props.menuItem.name);
       setDescription(props.menuItem.description);
       setBasePrice(props.menuItem.basePrice);
       setItemImagem(props.menuItem.image);
       setIngredients(props.menuItem.ingredients);
       setSizes(props.menuItem.sizes);
+      setCategory(props.menuItem.category);
     }
-  }, [props.menuItem]);
+  }, [categories, props.menuItem]);
+
+  // TODO: bug que nao esta carregando as categoria selecionada
+  function onChangeCategory(e: ChangeEvent<HTMLSelectElement>) {
+    const selectedCategoryId = e.target.value;
+    const selectedCategory = categories?.find(
+      (c) => c._id === selectedCategoryId
+    );
+    setCategory(selectedCategory);
+  }
 
   return (
     <form
@@ -48,6 +71,7 @@ export default function MenuItemForm(props: MenuItemFormProps) {
           basePrice,
           ingredients,
           sizes,
+          category,
         })
       }
     >
@@ -69,6 +93,23 @@ export default function MenuItemForm(props: MenuItemFormProps) {
             name="item-name"
             id="item-name"
           />
+
+          <label>Categoria</label>
+          <select
+            required={true}
+            name="category"
+            id="category"
+            value={category?._id || ""}
+            onChange={(e) => onChangeCategory(e)}
+          >
+            <option value="">Selecione...</option>
+            {categories?.map((c) => (
+              <option key={c._id} value={c._id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+
           <label>Descrição</label>
           <input
             type="text"
