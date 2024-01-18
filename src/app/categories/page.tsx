@@ -101,7 +101,7 @@ export default function CategoriesPage() {
   }
 
   return (
-    <section className="max-w-lg mx-auto mt-8">
+    <section className="max-w-2xl mx-auto mt-8">
       <UserTabs isAdmin={isAdmin} />
 
       <form className="max-w-md mx-auto" onSubmit={handleCategorySubmit}>

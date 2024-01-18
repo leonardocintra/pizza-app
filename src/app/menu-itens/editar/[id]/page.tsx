@@ -91,7 +91,7 @@ export default function EditarItemPage() {
   }
 
   return (
-    <section className="max-w-lg mx-auto mt-8">
+    <section className="max-w-2xl mx-auto mt-8">
       <UserTabs isAdmin={isAdmin} />
       <div className="max-w-sm mx-auto">
         <Link className="button" href={"/menu-itens/"}>

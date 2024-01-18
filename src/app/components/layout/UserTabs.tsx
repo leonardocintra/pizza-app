@@ -30,6 +30,9 @@ export default function UserTabs(props: UserTabProps) {
           <Link href={"/users"} className={path === "/users" ? "active" : ""}>
             Usuários
           </Link>
+          <Link href={"/orders"} className={path === "/orders" ? "active" : ""}>
+            Pedidos
+          </Link>
         </>
       )}
     </div>

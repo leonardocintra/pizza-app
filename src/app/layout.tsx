@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={roboto.className}>
-        <main className="max-w-6xl mx-auto p-4">
+        <main className="max-w-7xl mx-auto p-4">
           <AppProvider>
             <Toaster />
             <Header />
