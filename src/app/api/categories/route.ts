@@ -21,7 +21,18 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  mongoose.connect(process.env.MONGODB_URI as string)
-  
+  mongoose.connect(process.env.MONGODB_URI as string);
+
   return Response.json(await Category.find(), { status: 200 });
+}
+
+export async function DELETE(req: NextRequest) {
+  mongoose.connect(process.env.MONGODB_URI as string);
+
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+
+  await Category.findByIdAndDelete({ _id: id });
+
+  return Response.json(true);
 }

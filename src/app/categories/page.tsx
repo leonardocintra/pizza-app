@@ -5,6 +5,8 @@ import UserTabs from "../components/layout/UserTabs";
 import { UserProfileAuth } from "../components/UserProfileAuth";
 import toast from "react-hot-toast";
 import { CategoryDocument } from "../models/Category";
+import TrashIcon from "../components/icons/TrashIcon";
+import EditIcon from "../components/icons/EditIcon";
 
 export default function CategoriesPage() {
   const [categoryName, setCategoryName] = useState<string>("");
@@ -24,6 +26,30 @@ export default function CategoriesPage() {
         setCategories(categories);
       })
     );
+  }
+
+  async function handleDeleteCategory(id: string) {
+    const deletePromise = new Promise<void>(async (resolve, reject) => {
+      const response = await fetch(`/api/categories?id=${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        resolve();
+        fetchCategories();
+      } else {
+        reject();
+      }
+    });
+
+    await toast.promise(deletePromise, {
+      loading: "Deletando categoria...",
+      success: "Categoria excluida com sucesso!",
+      error: "Não foi possível excluir a categoria!",
+    });
   }
 
   async function handleCategorySubmit(ev: any) {
@@ -102,19 +128,33 @@ export default function CategoriesPage() {
         </div>
       </form>
       <div>
-        <h2 className="mt-8 text-sm text-gray-500">Editar categorias</h2>
+        <h2 className="mt-8 text-sm text-gray-400">Minhas categorias</h2>
         {categories &&
           categories.map((c: CategoryDocument) => (
-            <button
-              onClick={() => {
-                setEditedCategory(c);
-                setCategoryName(c.name);
-              }}
+            <div
               key={c._id}
-              className="rounded-xl p-2 px-4 flex gap-1 cursor-pointer mb-1"
+              className="bg-gray-300 rounded-xl p-2 px-4 flex gap-1 mb-1"
             >
-              <span>{c.name}</span>
-            </button>
+              <div className="grow">{c.name}</div>
+              <div className="flex gap-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditedCategory(c);
+                    setCategoryName(c.name);
+                  }}
+                >
+                  <EditIcon classname="w-6 h-6" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleDeleteCategory(c._id)}
+                >
+                  <TrashIcon classname="w-6 h-6" />
+                </button>
+              </div>
+            </div>
           ))}
       </div>
     </section>

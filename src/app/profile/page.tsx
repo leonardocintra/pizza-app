@@ -267,7 +267,7 @@ export default function ProfilePage() {
       </div>
 
       <p className="text-center mt-4 text-2xl">
-        https://youtu.be/nGoSP3MBV2E?t=25422
+        https://youtu.be/nGoSP3MBV2E?t=28380
       </p>
     </section>
   );
