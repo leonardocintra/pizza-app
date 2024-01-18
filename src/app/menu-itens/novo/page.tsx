@@ -64,7 +64,7 @@ export default function NovoItemPage() {
           Voltar para listagens
         </Link>
       </div>
-      <MenuItemForm menuItem={null} handleFormSubmit={handleFormSubmit} />
+      <MenuItemForm handleFormSubmit={handleFormSubmit} />
     </section>
   );
 }

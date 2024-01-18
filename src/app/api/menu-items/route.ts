@@ -18,6 +18,8 @@ export async function GET(req: Request) {
 export async function PUT(req: Request) {
   mongoose.connect(process.env.MONGODB_URI as string);
   const { _id, ...data } = await req.json();
+  console.log(data);
+
 
   await MenuItem.findByIdAndUpdate(_id, data);
 

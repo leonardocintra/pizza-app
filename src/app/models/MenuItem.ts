@@ -13,10 +13,13 @@ interface IMenuItem {
 
 export interface MenuItemDocument extends IMenuItem, Document {}
 
-const MenuPropertiesSchema = new Schema({
-  name: String,
-  price: Number,
-});
+const MenuPropertiesSchema = new Schema(
+  {
+    name: { type: String },
+    extraPrice: { type: Number },
+  },
+  { timestamps: false }
+);
 
 const menuItemSchema = new Schema<MenuItemDocument>(
   {

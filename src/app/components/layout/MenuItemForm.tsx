@@ -3,10 +3,11 @@ import EditableImage from "./EditableImage";
 import { SizesType } from "@/app/types/SizesType";
 import MenuItemFormProperties from "./MenuItemFormProperties";
 import { IngredientsType } from "@/app/types/IngredientsType";
+import { MenuItemDocument } from "@/app/models/MenuItem";
 
 type MenuItemFormProps = {
   handleFormSubmit: any;
-  menuItem: any;
+  menuItem?: MenuItemDocument;
 };
 
 export default function MenuItemForm(props: MenuItemFormProps) {
@@ -20,8 +21,10 @@ export default function MenuItemForm(props: MenuItemFormProps) {
   const [basePrice, setBasePrice] = useState<number>(
     props.menuItem?.basePrice || 0.0
   );
-  const [sizes, setSizes] = useState<SizesType[]>([]);
-  const [ingredients, setIngredients] = useState<IngredientsType[]>([]);
+  const [sizes, setSizes] = useState<SizesType[]>(props.menuItem?.sizes || []);
+  const [ingredients, setIngredients] = useState<IngredientsType[]>(
+    props.menuItem?.ingredients || []
+  );
 
   useEffect(() => {
     if (props.menuItem) {
@@ -29,6 +32,8 @@ export default function MenuItemForm(props: MenuItemFormProps) {
       setDescription(props.menuItem.description);
       setBasePrice(props.menuItem.basePrice);
       setItemImagem(props.menuItem.image);
+      setIngredients(props.menuItem.ingredients);
+      setSizes(props.menuItem.sizes);
     }
   }, [props.menuItem]);
 
@@ -41,6 +46,8 @@ export default function MenuItemForm(props: MenuItemFormProps) {
           name,
           description,
           basePrice,
+          ingredients,
+          sizes,
         })
       }
     >
@@ -80,8 +87,8 @@ export default function MenuItemForm(props: MenuItemFormProps) {
           />
 
           <MenuItemFormProperties
-            propName="Tamanho"
-            propLabel="Tamanos do item"
+            propName="Descrição"
+            propLabel="Tamanhos"
             propsValues={sizes}
             setPropsValues={setSizes}
           />

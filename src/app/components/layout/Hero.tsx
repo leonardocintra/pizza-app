@@ -6,7 +6,7 @@ export default function Hero() {
     <section className="hero mt-4">
       <div className="py-12">
         <h1 className="text-4xl font-semibold">
-          Tudo <br /> é melhor <br /> com {" "}
+          Tudo <br /> é melhor <br /> com{" "}
           <span className="text-primary">Pizza</span>
         </h1>
         <p className="my-6 text-gray-500 text-sm">
@@ -24,6 +24,7 @@ export default function Hero() {
       </div>
       <div className="relative">
         <Image
+          priority={false}
           src={"/pizza.png"}
           alt="pizza"
           fill

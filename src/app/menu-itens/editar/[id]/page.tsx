@@ -4,6 +4,7 @@ import { UserProfileAuth } from "@/app/components/UserProfileAuth";
 import LeftIcon from "@/app/components/icons/LeftIcon";
 import MenuItemForm from "@/app/components/layout/MenuItemForm";
 import UserTabs from "@/app/components/layout/UserTabs";
+import { MenuItemDocument } from "@/app/models/MenuItem";
 import Link from "next/link";
 import { redirect, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,7 +14,7 @@ export default function EditarItemPage() {
   const { isAdmin, userAdminLoading } = UserProfileAuth();
   const { id } = useParams();
 
-  const [menuItems, setMenuItems] = useState();
+  const [menuItems, setMenuItems] = useState<MenuItemDocument>();
   const [redirectPage, setRedirectPage] = useState<boolean>(false);
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function EditarItemPage() {
     return redirect("/menu-itens");
   }
 
-  async function handleFormSubmit(ev: any, data: any) {
+  async function handleFormSubmit(ev: any, data: Partial<MenuItemDocument>) {
     ev.preventDefault();
 
     data = { _id: id, ...data };

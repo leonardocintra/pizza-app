@@ -55,15 +55,29 @@ export default function LoginPage() {
           onClick={() => signIn("google", { callbackUrl: "/" })}
           className="flex gap-4 justify-center items-center"
         >
-          <Image src={"/google.png"} alt="Google" width={30} height={30} />
+          <Image
+            priority={false}
+            src={"/google.png"}
+            alt="Google"
+            width={30}
+            height={30}
+          />
           Login com Google
         </button>
         <button
           type="button"
-          onClick={() => signIn("facebook", { callbackUrl: "/", redirect: true })}
+          onClick={() =>
+            signIn("facebook", { callbackUrl: "/", redirect: true })
+          }
           className="flex gap-4 justify-center items-center mt-3"
         >
-          <Image src={"/facebook.png"} alt="Facebook" width={32} height={32} />
+          <Image
+            priority={false}
+            src={"/facebook.png"}
+            alt="Facebook"
+            width={32}
+            height={32}
+          />
           Login com Facebook
         </button>
       </form>

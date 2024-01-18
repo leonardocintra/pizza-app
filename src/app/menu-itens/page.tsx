@@ -40,7 +40,7 @@ export default function CategoriesPage() {
       </div>
 
       <div>
-        <h2 className="text-sm text-gray-500 mt-8">Editar itens do menu</h2>
+        <h2 className="text-base text-gray-600 mt-8 text-center mb-2">Meus itens do menu</h2>
         <div className="grid grid-cols-3 gap-2">
           {menuItens &&
             menuItens.map((item: MenuItemDocument) => (
@@ -50,13 +50,16 @@ export default function CategoriesPage() {
                 className="bg-gray-300 rounded-lg p-4"
               >
                 <div className="relative">
-                  <Image
-                    className="rounded-md"
-                    src={item.image}
-                    alt={item.name}
-                    height={100}
-                    width={100}
-                  />
+                  <div className="flex items-center justify-center">
+                    <Image
+                      priority={false}
+                      className="rounded-md"
+                      src={item.image}
+                      alt={item.name}
+                      height={100}
+                      width={100}
+                    />
+                  </div>
                 </div>
                 <div className="text-center">{item.name}</div>
               </Link>

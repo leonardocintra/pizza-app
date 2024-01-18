@@ -4,7 +4,14 @@ export default function MenuItem() {
   return (
     <div className="bg-gray-200 hover:bg-gray-50 p-4 rounded-lg text-center transition-all hover:shadow-lg hover:shadow-black/75">
       <div className="text-center">
-        <Image src={"/pizza.png"} alt="pizza" width={100} height={100} className="max-h-auto max-h-24 block mx-auto" />
+        <Image
+          src={"/pizza.png"}
+          alt="pizza"
+          width={100}
+          height={100}
+          className="max-h-auto max-h-24 block mx-auto"
+          priority={false}
+        />
       </div>
 
       <h4 className="font-semibold my-3 text-xl">Pizza Pepperoni</h4>

@@ -27,7 +27,7 @@ export default function RootLayout({
             {children}
           </AppProvider>
           <footer className="border-t p-8 text-center text-gray-500 mt-10">
-            &copy; 2023 - Todos os direitos reservados
+            &copy; 2023 - {new Date().getFullYear()} | Todos os direitos reservados
           </footer>
         </main>
       </body>
