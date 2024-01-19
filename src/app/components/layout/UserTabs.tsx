@@ -27,7 +27,7 @@ export default function UserTabs(props: UserTabProps) {
           >
             Itens do Menu
           </Link>
-          <Link href={"/users"} className={path === "/users" ? "active" : ""}>
+          <Link href={"/users"} className={path.includes("users")  ? "active" : ""}>
             Usuários
           </Link>
           <Link href={"/orders"} className={path === "/orders" ? "active" : ""}>

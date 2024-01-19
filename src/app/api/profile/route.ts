@@ -26,7 +26,7 @@ export async function PUT(req: any) {
   } else {
     return Response.json({
       erro: {
-        message: "Nome ou email não foram informados.",
+        message: "Email não foram informados.",
         data: data
       }
     }, { status: 400 });
