@@ -36,12 +36,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section>
+      <section id="about">
         <SectionHeaders
           mainHeader="Ficou alguma duvida ?"
           subHeader="Contato"
         />
-        <div className="my-5">
+        <div className="my-5" id="contato">
           <h3 className="text-center  text-4xl underline text-slate-700">(16) 99973-5008</h3>
         </div>
       </section>

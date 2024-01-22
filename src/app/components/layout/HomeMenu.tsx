@@ -1,8 +1,23 @@
+"use client";
+
 import Image from "next/image";
 import MenuItem from "../menu/MenuItem";
 import SectionHeaders from "./SectionHeaders";
+import { useEffect, useState } from "react";
+import { MenuItemDocument } from "@/app/models/MenuItem";
 
 export default function HomeMenu() {
+  const [bestSellers, setBestSellers] = useState<MenuItemDocument[]>([]);
+
+  useEffect(() => {
+    fetch("/api/menu-items").then((response) => {
+      response.json().then((data: MenuItemDocument[]) => {
+        const maisVendidas = data.slice(-3);
+        setBestSellers(maisVendidas);
+      });
+    });
+  }, []);
+
   return (
     <section>
       <div className="absolute left-0 right-0 w-full justify-start">
@@ -29,14 +44,10 @@ export default function HomeMenu() {
       <SectionHeaders mainHeader="Nossas pizzas" subHeader="Menu" />
 
       <div className="grid grid-cols-3 gap-4">
-        <MenuItem />
-        <MenuItem />
-        <MenuItem />
-        <MenuItem />
-        <MenuItem />
-        <MenuItem />
-        <MenuItem />
-        <MenuItem />
+        {bestSellers?.length > 0 &&
+          bestSellers.map((bestSeller) => (
+            <MenuItem key={bestSeller._id} item={bestSeller} />
+          ))}
       </div>
     </section>
   );

@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-br">
+    <html lang="pt-br" className="scroll-smooth">
       <body className={roboto.className}>
         <main className="max-w-7xl mx-auto p-4">
           <AppProvider>
@@ -27,7 +27,8 @@ export default function RootLayout({
             {children}
           </AppProvider>
           <footer className="border-t p-8 text-center text-gray-500 mt-10">
-            &copy; 2023 - {new Date().getFullYear()} | Todos os direitos reservados
+            &copy; 2023 - {new Date().getFullYear()} | Todos os direitos
+            reservados
           </footer>
         </main>
       </body>
