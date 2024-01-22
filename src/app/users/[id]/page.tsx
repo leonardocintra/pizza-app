@@ -32,7 +32,11 @@ export default function UsersPage() {
   return (
     <section className="max-w-2xl mx-auto mt-8">
       <UserTabs isAdmin={isAdmin} />
-      {user ? <UserForm user={user} /> : <span>Carregando ...</span>}
+      {user ? (
+        <UserForm user={user} isAdmin={isAdmin} />
+      ) : (
+        <span>Carregando ...</span>
+      )}
       <div></div>
     </section>
   );

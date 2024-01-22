@@ -23,8 +23,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (status === "authenticated") {
-
-      const email = session.data.user?.email
+      const email = session.data.user?.email;
 
       if (email) {
         fetch(`/api/profile?email=${email}`).then((response) => {
@@ -49,11 +48,11 @@ export default function ProfilePage() {
       <UserTabs isAdmin={isAdmin} />
 
       <div className="max-w-xl mx-auto">
-        <UserForm user={user} />
+        <UserForm user={user} isAdmin={isAdmin} />
       </div>
 
       <p className="text-center mt-4 text-2xl">
-        https://youtu.be/nGoSP3MBV2E?t=30796
+      https://youtu.be/nGoSP3MBV2E?t=33412
       </p>
     </section>
   );

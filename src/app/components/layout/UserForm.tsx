@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { ChangeEvent, MouseEvent, useState } from "react";
 import EditableImage from "./EditableImage";
 import { UserDocument } from "@/app/models/User";
 import toast from "react-hot-toast";
 
 type UserFormProps = {
   user: UserDocument;
+  isAdmin: boolean | false;
 };
 
 export default function UserForm(props: UserFormProps) {
-
   const [disableViaCep, setDisableViaCep] = useState<boolean>(false);
   const [disableEnderecoViaCep, setDisableEnderecoViaCep] =
     useState<boolean>(false);
@@ -26,6 +26,7 @@ export default function UserForm(props: UserFormProps) {
     props.user.referencia || ""
   );
   const [userName, setUserName] = useState<string>(props.user.name || "");
+  const [admin, setAdmin] = useState<boolean>(props.user.isAdmin || false);
   const [userImagem, setUserImagem] = useState<string>(
     props.user.image || "/sem-foto-pizzaapp.png"
   );
@@ -50,6 +51,7 @@ export default function UserForm(props: UserFormProps) {
           complemento,
           referencia,
           telefone,
+          isAdmin: admin,
         }),
       });
 
@@ -85,6 +87,11 @@ export default function UserForm(props: UserFormProps) {
       }
     }
     setCep(cep);
+  }
+
+  function handleAdmin(ev: ChangeEvent<HTMLInputElement>) {
+    const check = (ev.target as HTMLInputElement).checked;
+    setAdmin(check);
   }
 
   return (
@@ -149,7 +156,7 @@ export default function UserForm(props: UserFormProps) {
           disabled={disableEnderecoViaCep}
         />
 
-        <div className="flex gap-3 mb-2">
+        <div className="grid grid-cols-2 gap-3 mb-2">
           <div>
             <label>Numero</label>
             <input
@@ -217,6 +224,27 @@ export default function UserForm(props: UserFormProps) {
           value={telefone}
           onChange={(e) => setTelefone(parseInt(e.target.value))}
         />
+
+        {props.isAdmin && (
+          <div>
+            <label
+              htmlFor="isAdminCheckbox"
+              className="p-2 items-center mb-2 inline-flex"
+            >
+              <input
+                type="checkbox"
+                name="isAdminCheckbox"
+                id="isAdminCheckbox"
+                className="mr-2"
+                value={"1"}
+                defaultChecked={admin}
+                checked={admin}
+                onChange={(ev) => handleAdmin(ev)}
+              />
+              <span>Admin</span>
+            </label>
+          </div>
+        )}
 
         <button type="submit">Salvar</button>
       </form>
