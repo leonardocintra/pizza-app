@@ -17,7 +17,16 @@ export default function Header() {
     userName = userName.split(" ")[0];
   }
 
-  const { cartItems } = useContext(CartContext);
+  const cartContext = useContext(CartContext);
+  if (!cartContext) {
+    return (
+      <div>
+        <h1>Sem cartContext</h1>
+      </div>
+    );
+  }
+
+  const { cartItems } = cartContext;
 
   return (
     <div>

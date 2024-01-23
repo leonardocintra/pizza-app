@@ -4,7 +4,17 @@ import { SessionProvider } from "next-auth/react";
 import { createContext, useEffect, useState } from "react";
 import { MenuItemDocument } from "../models/MenuItem";
 
-export const CartContext = createContext({});
+interface CartContextProps {
+  cartItems: MenuItemDocument[];
+  setCartItems: React.Dispatch<React.SetStateAction<MenuItemDocument[]>>;
+  addToCart: (item: MenuItemDocument) => void;
+  clearCart: () => void;
+  removeCartItem: (index: number) => void;
+}
+
+export const CartContext = createContext<CartContextProps | undefined>(
+  undefined
+);
 
 export default function AppProvider({ children }: any) {
   const [cartItems, setCartItems] = useState<MenuItemDocument[]>([]);
@@ -34,6 +44,19 @@ export default function AppProvider({ children }: any) {
     });
   }
 
+  function clearCart() {
+    setCartItems([]);
+    saveCartItemsToLocalStorage([]);
+  }
+
+  function removeCartItem(indexToRemove: number) {
+    setCartItems((prev) => {
+      const newCartItems = prev.filter((v, index) => index !== indexToRemove);
+      saveCartItemsToLocalStorage(newCartItems);
+      return newCartItems;
+    });
+  }
+
   return (
     <SessionProvider>
       <CartContext.Provider
@@ -41,6 +64,8 @@ export default function AppProvider({ children }: any) {
           cartItems,
           setCartItems,
           addToCart,
+          clearCart,
+          removeCartItem,
         }}
       >
         {children}
